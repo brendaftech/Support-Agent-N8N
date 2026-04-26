@@ -1,0 +1,517 @@
+{
+  "name": "AGENTE DE SUPORTE",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "=hostedChat",
+        "initialMessages": "Olá! 👋\nEu sou o Agente de Suporte. Como posso te ajudar hoje??",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cbb9c85c-68fc-48c3-bdd0-f79b6b3890e7",
+      "name": "When chat message received",
+      "webhookId": "5779f270-fcb8-43cf-9dd9-65d6cbcf1035"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a98a6709-1b8b-4912-9192-1559a413f4ca",
+              "name": "usuario",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "54202d07-eead-4a68-b561-9fc0f10d1273",
+              "name": "mensagem",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dc60a06b-5762-4e78-bc12-ebf52e1cb402",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": "groq/compound-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        624,
+        160
+      ],
+      "id": "5d40cf7f-8a35-4dfd-add0-0cf6ce098d4c",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "VLTZsdI42KxMVI0V",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw",
+          "mode": "list",
+          "cachedResultName": "AGENTE DE SUPORTE integrado ao google sheets-AUTOMOÇÃO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Usuário": "={{ $json.usuario }}",
+            "Mensagem": "={{ $json.mensagem }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Usuário",
+              "displayName": "Usuário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "72e7822e-217f-493c-9b5d-2e9582056962",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "u3E7O1alqANTthdP",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.usuario }}",
+        "contextWindowLength": 111
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        160
+      ],
+      "id": "f686a2c9-5119-4465-b2ee-397bffcaab4a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "08b4fc4c-4d94-49dd-969e-595ffd416198",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Edit Fields').item.json.mensagem }}",
+        "options": {
+          "systemMessage": "Você é um super agente de suporte.Seja educado,gentil,engraçado e proativo"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "c17ae4b8-1102-4f07-b13a-ebb1413bb5db",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "34f8bd31-6c72-4199-acf8-aad548a3b6ce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "091f3e98b939dadf62d0eaf8410a8c8386da6aa0838322dd8d29d38f0f09ef3c"
+  },
+  "id": "Pp9OumACppRfZwtt",
+  "tags": []
+}{
+  "name": "AGENTE DE SUPORTE",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "=hostedChat",
+        "initialMessages": "Olá! 👋\nEu sou o Agente de Suporte. Como posso te ajudar hoje??",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cbb9c85c-68fc-48c3-bdd0-f79b6b3890e7",
+      "name": "When chat message received",
+      "webhookId": "5779f270-fcb8-43cf-9dd9-65d6cbcf1035"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a98a6709-1b8b-4912-9192-1559a413f4ca",
+              "name": "usuario",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "54202d07-eead-4a68-b561-9fc0f10d1273",
+              "name": "mensagem",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dc60a06b-5762-4e78-bc12-ebf52e1cb402",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": "groq/compound-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        624,
+        160
+      ],
+      "id": "5d40cf7f-8a35-4dfd-add0-0cf6ce098d4c",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "VLTZsdI42KxMVI0V",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw",
+          "mode": "list",
+          "cachedResultName": "AGENTE DE SUPORTE integrado ao google sheets-AUTOMOÇÃO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Usuário": "={{ $json.usuario }}",
+            "Mensagem": "={{ $json.mensagem }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Usuário",
+              "displayName": "Usuário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "72e7822e-217f-493c-9b5d-2e9582056962",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "u3E7O1alqANTthdP",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.usuario }}",
+        "contextWindowLength": 111
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        160
+      ],
+      "id": "f686a2c9-5119-4465-b2ee-397bffcaab4a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "08b4fc4c-4d94-49dd-969e-595ffd416198",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Edit Fields').item.json.mensagem }}",
+        "options": {
+          "systemMessage": "Você é um super agente de suporte.Seja educado,gentil,engraçado e proativo"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "c17ae4b8-1102-4f07-b13a-ebb1413bb5db",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "34f8bd31-6c72-4199-acf8-aad548a3b6ce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "091f3e98b939dadf62d0eaf8410a8c8386da6aa0838322dd8d29d38f0f09ef3c"
+  },
+  "id": "Pp9OumACppRfZwtt",
+  "tags": []
+}
