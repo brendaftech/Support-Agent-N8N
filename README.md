@@ -26,7 +26,7 @@
 
 ###
 
-<h3 align="left">Após o recebimento, o sistema pode:<br><br>Processar o texto enviado;<br>Integrar com outras ferramentas externas;<br>Utilizar inteligência artificial para gerar respostas.</h3>
+<h3 align="left">Após o recebimento, o sistema pode:<br><br>-Processar o texto enviado;<br>-Integrar com outras ferramentas externas;<br>-Utilizar inteligência artificial para gerar respostas.</h3>
 
 ###
 
