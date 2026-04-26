@@ -1,0 +1,22 @@
+                                        🔗 ACESSO AO PROJETO
+-------------------------------------------------------------------------------------------------------
+Este projeto conta com um Agente de Suporte automatizado integrado ao n8n, além 
+de uma planilha no Google Sheets para registro das interações realizadas 
+pelos usuários.
+-------------------------------------------------------------------------------------------------------
+                                      🤖💬 AGENTE DE SUPORTE
+-------------------------------------------------------------------------------------------------------
+Para acessar o Agente de Suporte, basta clicar no link abaixo. Ele permite a 
+interação direta com o sistema de automação,enviando mensagens que são processadas
+em tempo real pelo fluxo no n8n:
+
+👉 https://bren11.app.n8n.cloud/webhook/5779f270-fcb8-43cf-9dd9-65d6cbcf1035/chat
+-------------------------------------------------------------------------------------------------------
+                             📗🔗 REGISTRO DE DADOS (Google Sheets)
+-------------------------------------------------------------------------------------------------------
+Todas as interações realizadas no chat são registradas automaticamente em uma planilha do Google Sheets.
+Nela ficam armazenados dados como a pergunta do usuário e outras informações relevantes para análise e 
+acompanhamento do sistema.
+
+👉 https://docs.google.com/spreadsheets/d/1ebUaJpGJp4TGDkX5nxsTMKwxObpzhSPJYON4g_dVDtw/edit?usp=sharing
+-------------------------------------------------------------------------------------------------------
